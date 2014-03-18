@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 1</title>
+    <script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin-left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+
+    var starField;
+    var player;
+    var pBullets;
+
+    var cursors;
+    var keyboard;
+    var spacebar;
+    var spacebarPressed = false;
+
+    function preload() {
+        game.load.image("ship", "assets/part2artship1_0.png"); // http://opengameart.org/content/part2artcom-spaceship-example
+        game.load.image("starfield", "assets/space1_0.png") // http://opengameart.org/content/space-background-2
+    }
+
+    function create() {
+        game.physics.startSystem(Phaser.Physics.P2JS);
+
+        starField = game.add.sprite(0, 0, "starfield");
+        player = game.add.sprite(game.world.width / 2, game.world.height / 2, "ship");
+        pBullets = game.add.group();
+
+        player.width = 50;
+        player.height = 70;
+        game.physics.enable(player, Phaser.Physics.P2JS, false);
+
+        player.body.angularDamping = .8;
+        player.body.damping = .15;
+        player.body.collideWorldBounds = true;
+
+
+        keyboard = game.input.keyboard;
+        cursors = keyboard.createCursorKeys();
+        spacebar = Phaser.Keyboard.SPACEBAR;
+    }
+
+    function update() {
+        if (cursors.left.isDown) {
+            player.body.angularVelocity -= .15;
+        } else if (cursors.right.isDown) {
+            player.body.angularVelocity += .15;
+        }
+
+        if (cursors.up.isDown) {
+            player.body.thrust(250);
+        } else if (cursors.down.isDown) {
+            player.body.thrust(-150);
+        }
+
+        if (keyboard.isDown(spacebar)) {
+            if (!spacebarPressed) {
+                spacebarPressed = true;
+                console.log("space");
+                game.time.events.add(Phaser.Timer.SECOND *.5, function () { spacebarPressed = false }, this);
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>
