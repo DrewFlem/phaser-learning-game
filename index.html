@@ -46,7 +46,6 @@
         player.body.damping = .15;
         player.body.collideWorldBounds = true;
 
-
         keyboard = game.input.keyboard;
         cursors = keyboard.createCursorKeys();
         spacebar = Phaser.Keyboard.SPACEBAR;
@@ -68,8 +67,9 @@
         if (keyboard.isDown(spacebar)) {
             if (!spacebarPressed) {
                 spacebarPressed = true;
-                console.log("space");
                 game.time.events.add(Phaser.Timer.SECOND *.5, function () { spacebarPressed = false }, this);
+
+                pBullet.create(player.x, player.y, 'sonic');
             }
         }
     }
